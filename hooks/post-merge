@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# Post-merge hook to log merges into the main branch
+
+# Get the current branch name
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+
+# Check if we're on the main branch
+if [ "$current_branch" = "main" ]; then
+    # Get merge information
+    merge_commit=$(git log -1 --pretty=format:"%H")
+    merge_author=$(git log -1 --pretty=format:"%an")
+    merge_date=$(git log -1 --pretty=format:"%ad")
+    merge_message=$(git log -1 --pretty=format:"%s")
+    
+    # Log file location
+    log_file="$(git rev-parse --show-toplevel)/merge-log.txt"
+    
+    # Log the merge
+    echo "========================================" >> "$log_file"
+    echo "Merge completed into main branch" >> "$log_file"
+    echo "Date: $merge_date" >> "$log_file"
+    echo "Author: $merge_author" >> "$log_file"
+    echo "Commit: $merge_commit" >> "$log_file"
+    echo "Message: $merge_message" >> "$log_file"
+    echo "========================================" >> "$log_file"
+    echo "" >> "$log_file"
+    
+    echo "Merge logged to merge-log.txt"
+fi
+
+exit 0
